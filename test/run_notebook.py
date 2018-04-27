@@ -3,7 +3,7 @@
 Created on Wed Apr 25 13:57:34 2018
 Testing wrapper for ipython notebooks
 https://blog.thedataincubator.com/2016/06/testing-jupyter-notebooks/
-@author: Tom
+@author: Tom Tranter
 """
 import os
 import subprocess
