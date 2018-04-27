@@ -28,9 +28,7 @@ def test_ipynb():
     rootdir = os.path.split(os.getcwd())[0]
     for path, subdirs, files in os.walk(rootdir):
         for name in files:
-            if (name.endswith('.ipynb') and
-                'checkpoint' not in name and
-                'temp' not in name):
+            if (name.endswith('.ipynb') and 'checkpoint' not in name):
                 nbook = os.path.join(path, name)
                 rc = _notebook_run(nbook)
                 print(nbook)
