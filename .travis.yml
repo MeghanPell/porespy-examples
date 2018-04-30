@@ -13,10 +13,8 @@ before_install:
   - export PATH="$HOME/miniconda/bin:$PATH"
 
 install:
-  - conda install --yes python=$TRAVIS_PYTHON_VERSION --file requirements/conda_requirements.txt
-  - pip install -r requirements/pypi_requirements.txt
-  - pip install -r requirements/test_requirements.txt
-  - python setup.py install
+  - conda env create -n test-environment python=$TRAVIS_PYTHON_VERSION -f environment.yml
+  - source activate test-environment
 
 script: pytest --pep8 --cov=./
 
