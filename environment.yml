@@ -1,0 +1,22 @@
+name: porespy_examples
+channels:
+- conda-forge
+- defaults
+dependencies:
+- python=3.6
+- numpy
+- jupyter
+- scikit-image
+- pytest
+- codecov
+- coverage
+- pep8
+- pytest-cache
+- pytest-cov
+- pytest-pep8
+- pip:
+  - imageio
+  - OpenPNM
+  - porespy
+  - tqdm
+  - gitpython
