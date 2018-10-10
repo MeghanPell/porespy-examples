@@ -44,6 +44,7 @@ local_t_data = ps.metrics.pore_size_distribution(local_t)
 plt.plot(*mip_data, 'b.-', label='mip')
 plt.plot(*local_t_data, 'r.-', label='local_thickness')
 plt.legend()
+#matt adding a line because he's unsure how this works
 ```
 
 ![](https://i.imgur.com/oCaER4n.png)
