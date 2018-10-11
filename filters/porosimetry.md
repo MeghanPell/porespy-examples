@@ -1,50 +1,46 @@
-# Porosimetry
+# Porosimetry and Local Thickness
 
-The following recipe illustrates how to simulate mercury intrusion porosimetry on an image using the ``porosimetry`` filter.  The PoreSpy implementation is equivalent to 'morphological image opening' of [Hilpert et al](<https://doi.org/10.1016/S0309-1708(00)00056-7>).  PoreSpy's implementation uses distance transforms instead of morphological operations so it is generally faster, especially for larger sphere sizes since binary opening slows down with larger structuring elements.  
-
-Start by importing the necessary packages:
+## Import Packages
 
 ``` python
 import porespy as ps
 import matplotlib.pyplot as plt
-
 ```
 
-Generate an artificial 2D image for illustration purposes:
-``` python
-im = ps.generators.blobs(shape=[400, 400], porosity=0.6, blobiness=2)
-plt.imshow(im)
-plt.axis('off')
-
+# Generate Artificial Image
+ ```python
+im = ps.generators.blobs(shape=[800,800], blobiness=[2,1.5],porosity=0.60)
+fig, ax0 = plt.subplots(figsize=(10,10))
+ax0.imshow(im)
+ax0.axis('off')
 ```
+![Imgur](https://i.imgur.com/u249RfT.png)
 
-![](https://i.imgur.com/aFynH6W.png)
+# Apply the Local Thickness and Porosimetry Filters
+```python
+lt = ps.filters.local_thickness(im,sizes=50)
+psd = ps.filters.porosimetry(im,sizes=50,access_limited=True,mode='fft')
 
-Apply the ``porosimetry`` filter to the image both with and without ``access_limited`` applied:
-
-``` python
-mip = ps.filters.porosimetry(im, access_limited=True)
-local_t = ps.filters.porosimetry(im, access_limited=False)
-plt.subplot(1, 2, 1)
-plt.imshow(mip)
-plt.axis('off')
-plt.subplot(1, 2, 2)
-plt.imshow(local_t)
-plt.axis('off')
-
+fig, (ax0,ax1) = plt.subplots(ncols=2,figsize=(20,10))
+im0 = ax0.imshow(lt)
+fig.colorbar(im0,ax=ax0,shrink=0.75)
+im1 = ax1.imshow(psd)
+fig.colorbar(im1,ax=ax1,shrink=0.75)
+fig.savefig(r'../images_to_upload/psd/lt_psd',dpi=300)
 ```
+![Imgur](https://i.imgur.com/pCYVg0N.png)
 
-![](https://i.imgur.com/1LAh5XJ.png)
+Note: the main difference between the ```local_thickness``` and ```porosimetry``` filters is the ```access_limited``` keyword. With it toggled ```True``` the filter allows shielding from smaller pores closer to the edges or inlets of the image. ```local_thickness``` gives the true pore or feature size distribution while the ```porosimetry``` filter simulates the invasion process similar to mercury intrusion porosimetry
 
-Finally, the images produced by the filter can be passed to the ``pore_size_distribution`` function in the ``metrics`` module to produce numerical data of the pore volume vs. sphere radius:
+# Calculate the Distributions and Analyze the Results
 
-``` python
-mip_data = ps.metrics.pore_size_distribution(mip)
-local_t_data = ps.metrics.pore_size_distribution(local_t)
-plt.plot(*mip_data, 'b.-', label='mip')
-plt.plot(*local_t_data, 'r.-', label='local_thickness')
-plt.legend()
-#matt adding a line because he's unsure how this works
-```
+![Imgur](https://i.imgur.com/xsf7noz.png)
 
-![](https://i.imgur.com/oCaER4n.png)
+The difference in the shape of the curves shown above allows for the determination of the 'shielding' present in the material.
+Alternatively if you prefer you can generate histograms of the probability density function of the materials.
+
+![Imgur](https://i.imgur.com/uy6AkvT.png)
+
+
+
+
